@@ -43,14 +43,30 @@ if __name__ == "__main__":
 
     fig, ax = plt.subplots(1, 1)
 
-    ax.scatter(temperatures, revenues, s=1)
+    fig, ax = plt.subplots(1, 1)
+
+    ax.scatter(temperatures, revenues, s=1, label="Data")
+
+    line_x = np.linspace(min(temperatures), max(temperatures), 100)
+    line_y = line_function(line_x)
+
+    ax.plot(line_x, line_y, color="red", label="Trend Line")
 
     ax.set_xlabel("Outdoor Temperature (C)")
     ax.set_ylabel("Revenue")
     ax.set_title("Ice Cream Sales vs Temperature")
 
+    ax.text(
+        min(temperatures),
+        max(revenues),
+        f"y = {coefficients[0]:.2f}x {coefficients[1]:+.2f}",
+        color="red"
+    )
+
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
+
+    ax.legend()
 
     plt.show()
 
