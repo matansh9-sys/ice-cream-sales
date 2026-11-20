@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 filename = "Ice Cream.csv"
 
@@ -40,7 +41,16 @@ if __name__ == "__main__":
         temperatures, revenues
     )
 
-    print("Number of records:", len(temperatures))
-    print("Slope:", coefficients[0])
-    print("Intercept:", coefficients[1])
-    print("Predicted revenue at 25 degrees:", line_function(25))
+    fig, ax = plt.subplots(1, 1)
+
+    ax.scatter(temperatures, revenues, s=1)
+
+    ax.set_xlabel("Outdoor Temperature (C)")
+    ax.set_ylabel("Revenue")
+    ax.set_title("Ice Cream Sales vs Temperature")
+
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+
+    plt.show()
+
