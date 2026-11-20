@@ -1,12 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
+
 from PySide6.QtWidgets import (
     QApplication,
     QWidget,
     QLabel,
     QPushButton,
-    QVBoxLayout
+    QVBoxLayout,
+    QLineEdit
 )
+
 
 filename = "Ice Cream.csv"
 
@@ -39,6 +42,64 @@ def calculate_trendline(temperatures, revenues):
 
     return coefficients, line_function
 
+class FileWindow(QWidget):
+
+    def __init__(self, main_window):
+        super().__init__()
+
+        self.main_window = main_window
+
+        self.setWindowTitle("Choose CSV File")
+        self.resize(450, 180)
+
+        layout = QVBoxLayout()
+
+        self.label = QLabel("Enter CSV file name or path:")
+        layout.addWidget(self.label)
+
+        self.file_input = QLineEdit()
+        self.file_input.setText("Ice Cream.csv")
+        layout.addWidget(self.file_input)
+
+        self.load_button = QPushButton("Load CSV")
+        layout.addWidget(self.load_button)
+
+        self.message = QLabel("")
+        layout.addWidget(self.message)
+
+        self.load_button.clicked.connect(self.load_file)
+
+        self.setLayout(layout)
+
+    def load_file(self):
+
+        filename = self.file_input.text()
+
+        if filename == "":
+            self.message.setText("Please enter a file name")
+            return
+
+        try:
+            temperatures, revenues = load_sales(filename)
+
+            coefficients, line_function = calculate_trendline(
+                temperatures, revenues
+            )
+
+        except Exception as error:
+            self.message.setText("Error: " + str(error))
+            return
+
+        self.main_window.temperatures = temperatures
+        self.main_window.revenues = revenues
+        self.main_window.coefficients = coefficients
+        self.main_window.line_function = line_function
+
+        self.main_window.status_label.setText(
+            "Loaded: " + filename
+        )
+
+        self.close()
 
 class IceCreamWindow(QWidget):
 
@@ -64,6 +125,16 @@ class IceCreamWindow(QWidget):
         layout.addWidget(self.graph_button)
 
         self.graph_button.clicked.connect(self.draw_graph)
+
+        self.file_window = FileWindow(self)
+
+        self.open_button = QPushButton("Choose CSV File")
+        layout.addWidget(self.open_button)
+
+        self.open_button.clicked.connect(self.file_window.show)
+
+        self.status_label = QLabel("Loaded: Ice Cream.csv")
+        layout.addWidget(self.status_label)
 
         self.setLayout(layout)
 
