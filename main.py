@@ -11,6 +11,8 @@ from PySide6.QtWidgets import (
     QFileDialog
 )
 
+from About import AboutWindow
+
 def load_sales(filename):
 
     temperatures = []
@@ -73,6 +75,11 @@ class IceCreamWindow(QWidget):
         
         self.status_label = QLabel("No CSV file loaded")
         layout.addWidget(self.status_label)
+
+        self.about_button = QPushButton("About")
+        layout.addWidget(self.about_button)
+
+        self.about_button.clicked.connect(self.open_about)
 
         self.setLayout(layout)
 
@@ -153,6 +160,12 @@ class IceCreamWindow(QWidget):
         ax.legend()
 
         plt.show()
+
+    def open_about(self):
+
+        self.about_window = AboutWindow()
+        self.about_window.show()
+
 
 
 
